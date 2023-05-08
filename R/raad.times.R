@@ -1,9 +1,4 @@
-#' raadtools::timedateFrom
-raad_timedate_from <- function(x, ...) {
-  as.POSIXct(x, tz = "UTC", ...)
-}
-
-#' raadtools:::.valiDates
+# taken from raadtools:::.valiDates
 raad_vali_dates <- function(x, allOK = TRUE) {
   xs <- raad_timedate_from(x)
   bad <- is.na(xs)
@@ -15,14 +10,14 @@ raad_vali_dates <- function(x, allOK = TRUE) {
   xs[!bad]
 }
 
-#' raadtools:::.indexDates
+# taken from raadtools:::.indexDates
 raad_index_dates <- function(xdate, filedate) {
   windex <- findInterval(xdate, filedate)
   windex[windex < 1] <- 1
   windex[windex > length(filedate)] <- length(filedate)
   windex
 }
-#' raadtools:::.sortDates
+# taken from raadtools:::.sortDates
 raad_sort_dates <- function(x, resortOK = FALSE) {
   ord <- order(x)
   if (any(diff(ord) < 0)) {
@@ -33,7 +28,7 @@ raad_sort_dates <- function(x, resortOK = FALSE) {
   x
 }
 
-#' raadtools:::.dedupe
+# taken from raadtools:::.dedupe
 raad_dedupe <- function(index, date, removeDupes = TRUE) {
   nondupes <- !duplicated(index)
   if (sum(nondupes) < length(index)) {
@@ -44,7 +39,7 @@ raad_dedupe <- function(index, date, removeDupes = TRUE) {
   list(index = index, date = date)
 }
 
-#' raadtools:::.matchFiles
+# taken from raadtools:::.matchFiles
 raad_match_files <- function(querydate, refdate, index, daytest = 7) {
   ##
   deltatime <- abs(difftime(querydate, refdate, units = "days"))
@@ -60,19 +55,19 @@ raad_match_files <- function(querydate, refdate, index, daytest = 7) {
   index
 }
 
-#' raadtools:::.processDates
+# taken from raadtools:::.processDates
 raad_process_dates <- function(qdate, fdate, timeres) {
   ## checks on dates, we drop any that are NA
   #qdate <- .valiDates(qdate, allOK = FALSE)
- qdate <- raad_vali_dates(qdate, allOK = FALSE)
+  qdate <- raad_vali_dates(qdate, allOK = FALSE)
 
   ## sort dates if need be
   #qdate <- .sortDates(qdate, resortOK = TRUE)
- qdate <- raad_sort_dates(qdate, resortOK = TRUE)
+  qdate <- raad_sort_dates(qdate, resortOK = TRUE)
 
   ## mapping of files/dates, so we can process time series
   #findex <- .indexDates(qdate, fdate)
- findex <- raad_index_dates(qdate, fdate)
+  findex <- raad_index_dates(qdate, fdate)
 
   ## check for duplicates
   #dedupedates <- .dedupe(findex, qdate, removeDupes = TRUE)
@@ -82,11 +77,29 @@ raad_process_dates <- function(qdate, fdate, timeres) {
 
   #.matchFiles(date, fdate[findex], findex,
   raad_match_files(date, fdate[findex], findex,
-              daytest = switch(timeres, "4hourly" = 1/6, "12hourly" = 1/2, "3hourly" = 1/8, "6hourly" = 0.25, daily = 1.5, weekly = 4, monthly = 15, weekly3 = 26, "8daily" = 5, "8D" = 5))
+                   daytest = switch(timeres, "4hourly" = 1/6, "12hourly" = 1/2, "3hourly" = 1/8, "6hourly" = 0.25, daily = 1.5, weekly = 4, monthly = 15, weekly3 = 26, "8daily" = 5, "8D" = 5))
 
 }
 
-#' raadtools:::.processFiles
+
+
+#' taken from raadtools::timedateFrom
+#'
+#' @param x
+#' @param ...
+#' @export
+raad_timedate_from <- function(x, ...) {
+  as.POSIXct(x, tz = "UTC", ...)
+}
+
+
+#' taken from raadtools:::.processFiles
+#'
+#' tr timeresolutions is something from 4hourly, 12hourly, 3hourly, 6hourly, daily, weekly, monthly, weekly3, 8daily, 8D
+#' @param dt date-time column (POSIXct)
+#' @param f files (date, at least)
+#' @param tr time resolution, see Details
+#' @export
 raad_process_files <- function(dt, f, tr) {
   #findex <- .processDates(dt, f$date, tr)
   findex <- raad_process_dates(dt, f$date, tr)
