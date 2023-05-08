@@ -1,0 +1,14 @@
+Package: raad.times
+Title: A Package of the 'raadtools' file/time handling
+Version: 0.0.0.9000
+Authors@R: c(person("Michael", "Sumner", email = "mdsumner@gmail.com", role = c("aut", "cre")))
+Description: The logic used by raadtools to process sets of dated-files to given dates. This is just to explore
+ it independently of the tool to see if we can replace it (perhaps with {clock}). 
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: es
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10)
+LazyData: true
